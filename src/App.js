@@ -1,33 +1,30 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
-function App() {
-  function onScroll() {
-    console.log('页面滚动了')
+function useUpdateInput(initialValue) {
+  const [value, setValue] = useState(initialValue)
+  return {
+    value,
+    onChange: event => setValue(event.target.value)
   }
-
-  useEffect(() => {
-    window.addEventListener('scroll', onScroll)
-
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-    }
-  }, [])
-
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    const t = setInterval(() => {
-      setCount(count + 1)
-    }, 1000)
-
-    return () => {
-      clearInterval(t)
-    }
-  }, [])
-
-  return (
-    <div>App</div>
-  );
 }
 
-export default App;
+function App() {
+  const usernameInput = useUpdateInput('')
+  const passwordInput = useUpdateInput('')
+
+  const submitForm = event => {
+    event.preventDefault()
+    console.log(usernameInput.value)
+    console.log(passwordInput.value)
+  }
+
+  return (
+    <form onSubmit={submitForm}>
+      <input type="text" name="username" {...usernameInput} />
+      <input type="password" name="password" {...passwordInput} />
+      <input type="submit" />
+    </form>
+  )
+}
+
+export default App
