@@ -1,29 +1,38 @@
 import { useState } from 'react'
 
-function useUpdateInput(initialValue) {
-  const [value, setValue] = useState(initialValue)
-  return {
-    value,
-    onChange: event => setValue(event.target.value)
+
+/* ---------- useReducer ---------- */
+
+function useReducer(reducer, initialState) {
+  const [state, setState] = useState(initialState)
+
+  function dispatch(action) {
+    const newState = reducer(state, action)
+    setState(newState)
   }
+
+  return [state, dispatch]
 }
 
 function App() {
-  const usernameInput = useUpdateInput('')
-  const passwordInput = useUpdateInput('')
-
-  const submitForm = event => {
-    event.preventDefault()
-    console.log(usernameInput.value)
-    console.log(passwordInput.value)
+  function reducer(state, action) {
+    switch (action.type) {
+      case 'increment':
+        return state + 1
+      case 'decrement':
+        return state - 1
+      default:
+        return state
+    }
   }
+  const [count, dispatch] = useReducer(reducer, 0)
 
   return (
-    <form onSubmit={submitForm}>
-      <input type="text" name="username" {...usernameInput} />
-      <input type="password" name="password" {...passwordInput} />
-      <input type="submit" />
-    </form>
+    <div>
+      {count}
+      <button onClick={() => dispatch({type: 'increment'})}>+1</button>
+      <button onClick={() => dispatch({type: 'decrement'})}>-1</button>
+    </div>
   )
 }
 
