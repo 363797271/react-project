@@ -1,34 +1,22 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
+import styled from '@emotion/styled'
+import { useTheme } from '@emotion/react'
+
+const PrimaryDiv = styled.div`
+  color: ${props => props.theme.colors.primary}
+`
+
+const primaryColor = theme => ({
+  color: theme.colors.primary
+})
 
 function App() {
-  const initialValues = {
-    username: '',
-    password: ''
-  }
-  const validationSchema = Yup.object({
-    username: Yup.string()
-      .max(15, '用户名长度不得超过15个字')
-      .required('请输入用户名'),
-    password: Yup.string()
-      .min(6, '密码长度不得小于6')
-      .required('请输入密码')
-  })
-  const onSubmit = values => {
-    console.log(values)
-  }
-
+  const theme = useTheme()
   return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-      <Form>
-        <Field name="username" />
-        <ErrorMessage name="username" />
-        <Field name="password" />
-        <ErrorMessage name="password" />
-        <input type="submit" />
-      </Form>
-    </Formik>
+    <div>
+    <PrimaryDiv>样式化组件</PrimaryDiv>
+      <div css={primaryColor}>向css属性传递一个函数</div>
+      <div css={{color: theme.colors.primary}}>使用钩子函数</div>
+    </div>
   )
 }
-
 export default App
